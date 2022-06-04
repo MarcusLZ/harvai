@@ -1,0 +1,1 @@
+DATA_LOCAL_PATH = "harvai/raw_data/LEGITEXT000006074228.pdf"
