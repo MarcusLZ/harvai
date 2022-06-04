@@ -25,3 +25,7 @@ def remove_stopwords(x): # Retirer les Stopwords
     x = [word for word in word_tokens if not word in stop_words]
     x = [word for word in x if len(word)>1] # retrait des caractères spéciaux restants
     return x
+
+def tfidf_format(x): # Mise en forme pour TfIdf
+    x = " ".join([str(word) for word in x])
+    return x
