@@ -16,10 +16,10 @@ def get_answer(question):
 
 def get_context(question):
     """calling the research model/function"""
-    df = get_clean_preproc_data().article_wo_punctuation
+    df = get_clean_preproc_data()
 
-    model = Nn_model(df).fit()
+    model = Nn_model(df.article_tfidf_format).fit()
 
-    articles = model.predict(question)[0][0]
+    articles = model.predict(question)[0][0:2]
 
-    return df[articles]
+    return ''.join(df.article_lowered[articles])
