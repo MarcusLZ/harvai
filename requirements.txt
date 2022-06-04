@@ -35,7 +35,6 @@ termcolor
 
 
 # NLP
-re
-string
+regex
 nltk
 PyPDF2
