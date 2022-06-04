@@ -3,7 +3,7 @@ import PyPDF2 # PDF reader
 import re # Regex
 
 
-from harvai.params import data_local_path
+from harvai.params import DATA_LOCAL_PATH
 from harvai.preprocessing import article_number,article_content,article_lower,remove_numbers,remove_punctuation,remove_stopwords
 
 def get_clean_preproc_data():
@@ -15,7 +15,7 @@ def get_clean_preproc_data():
 def get_data(online=False):
     code_brut = ''
     if online == False :
-        PDF = open(data_local_path,'rb')
+        PDF = open(DATA_LOCAL_PATH,'rb')
         Reader = PyPDF2.PdfFileReader(PDF)
         for i in range(Reader.numPages):
             Pages = Reader.getPage(i)
