@@ -22,9 +22,9 @@ def index():
     return {"Greeting": "Welcome to harvai API"}
 
 @app.get("/answer")
-def answer(question, articles=1):
+def answer(question, model="KNN"):
     # from the user input (question) and articles, get the answer from hugging face
 
-    answer = get_answer(question)['answer']
+    answer = get_answer(question, model)['answer']
 
     return {"question": question, "answer": answer }
