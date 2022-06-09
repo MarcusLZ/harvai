@@ -17,7 +17,7 @@ def remove_numbers(x): # retirer les digits
 
 def remove_punctuation(x): # retirer la ponctuation
     for punctuation in string.punctuation :
-        x = x.replace(punctuation,"")
+        x = x.replace(punctuation," ")
     return x
 
 def remove_stopwords(x): # Retirer les Stopwords

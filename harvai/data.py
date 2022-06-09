@@ -2,8 +2,12 @@ import pandas as pd
 import PyPDF2 # PDF reader
 import re # Regex
 import os
+import string
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+import simplemma
 
-from harvai.params import get_path_data
+from harvai.params import get_path_data, get_path_json
 from harvai.preprocessing import article_number,article_content,article_lower,remove_numbers,remove_punctuation,remove_stopwords, tfidf_format,Lemmatize
 
 def get_clean_preproc_data():
@@ -37,16 +41,40 @@ def clean_data(code_brut):
     return data
 
 def preprocessing_data(data):
-    data['article_number'] = data['article_base'].apply(lambda x : article_number(x))
-    data['article_content'] = data['article_base'].apply(lambda x : article_content(x))
-    data['article_lowered'] = data['article_content'].apply(lambda x : article_lower(x))
-    data['article_wo_numbers'] = data['article_lowered'].apply(lambda x : remove_numbers(x))
-    data['article_wo_punctuation'] = data['article_wo_numbers'].apply(lambda x : remove_punctuation(x))
-    data['article_wo_stopwords'] = data['article_wo_punctuation'].apply(lambda x : remove_stopwords(x))
-    data['article_tfidf_format'] = data['article_wo_stopwords'].apply(lambda x : tfidf_format(x))
-    data['article_lemmatized'] = data['article_tfidf_format'].apply(lambda x : Lemmatize(x))
-    return data
+    if os.path.exists(get_path_json(os.getcwd())):
+        data = pd.read_json(path_or_buf=get_path_json(os.getcwd()))
+        return data
+    else :
+        data['article_number'] = data['article_base'].apply(lambda x : article_number(x))
+        data['article_content'] = data['article_base'].apply(lambda x : article_content(x))
+        data['article_lowered'] = data['article_content'].apply(lambda x : article_lower(x))
+        data['article_wo_numbers'] = data['article_lowered'].apply(lambda x : remove_numbers(x))
+        data['article_wo_punctuation'] = data['article_wo_numbers'].apply(lambda x : remove_punctuation(x))
+        data['article_wo_stopwords'] = data['article_wo_punctuation'].apply(lambda x : remove_stopwords(x))
+        data['article_tfidf_format'] = data['article_wo_stopwords'].apply(lambda x : tfidf_format(x))
+        data['article_lemmatized'] = data['article_tfidf_format'].apply(lambda x : Lemmatize(x))
+        data.to_json('../raw_data/data_preproc.json')
+        return data
 
+def preprocessing_user_input(user_input):
+    user_input = user_input.lower() # article_lower
+    user_input = ''.join([i for i in user_input if not i.isdigit()]) # remove number
+
+    for punctuation in string.punctuation : # remove ponctuation
+        user_input = user_input.replace(punctuation," ")
+
+    stop_words = set(stopwords.words('french')) # remove_stopwords
+    word_tokens = word_tokenize(user_input)
+    user_input = [word for word in word_tokens if not word in stop_words]
+    user_input = [word for word in user_input if len(word)>1]
+
+    user_input = " ".join([str(word) for word in user_input]) # tfidf_format
+
+    langdata = simplemma.load_data('fr') # Lemmatize
+    user_input = simplemma.text_lemmatizer(user_input,langdata)
+    user_input = " ".join([str(word) for word in user_input])
+
+    return user_input
 
 if __name__ == '__main__':
     code_brut = get_data()
