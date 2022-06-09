@@ -3,6 +3,7 @@
 # ----------------------------------
 install_requirements:
 	@pip install -r requirements.txt
+	@python3 -m spacy download fr_core_news_md
 
 check_code:
 	@flake8 scripts/* harvai/*.py

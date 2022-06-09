@@ -33,8 +33,10 @@ joblib
 memoized-property
 termcolor
 sentencepiece
+os
 
 # NLP
 regex
 nltk
 PyPDF2
+simplemma

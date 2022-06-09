@@ -1,6 +1,7 @@
 import string
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+import simplemma
 
 def article_number(x): # return le numero de l'article
     return x[:17]
@@ -26,6 +27,13 @@ def remove_stopwords(x): # Retirer les Stopwords
     x = [word for word in x if len(word)>1] # retrait des caractères spéciaux restants
     return x
 
+
 def tfidf_format(x): # Mise en forme pour TfIdf
+    x = " ".join([str(word) for word in x])
+    return x
+
+def Lemmatize(x): # Mise en forme pour TfIdf + Lemmatized
+    langdata = simplemma.load_data('fr')
+    x = simplemma.text_lemmatizer(x,langdata)
     x = " ".join([str(word) for word in x])
     return x
