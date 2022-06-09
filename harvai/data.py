@@ -4,7 +4,7 @@ import re # Regex
 import os
 
 from harvai.params import get_path_data
-from harvai.preprocessing import article_number,article_content,article_lower,remove_numbers,remove_punctuation,remove_stopwords, tfidf_format
+from harvai.preprocessing import article_number,article_content,article_lower,remove_numbers,remove_punctuation,remove_stopwords, tfidf_format,Lemmatize
 
 def get_clean_preproc_data():
     code_brut = get_data()
@@ -44,6 +44,7 @@ def preprocessing_data(data):
     data['article_wo_punctuation'] = data['article_wo_numbers'].apply(lambda x : remove_punctuation(x))
     data['article_wo_stopwords'] = data['article_wo_punctuation'].apply(lambda x : remove_stopwords(x))
     data['article_tfidf_format'] = data['article_wo_stopwords'].apply(lambda x : tfidf_format(x))
+    data['article_lemmatized'] = data['article_tfidf_format'].apply(lambda x : Lemmatize(x))
     return data
 
 
