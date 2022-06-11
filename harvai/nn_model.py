@@ -1,4 +1,3 @@
-from unittest import findTestCases
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
 from harvai.data import get_clean_preproc_data
@@ -31,3 +30,13 @@ class Nn_model():
         else:
             article = self.articles[0][0:article_number]
         return ''.join(self.data.article_lowered[article])
+
+
+
+if __name__ == "__main__":
+
+    test = Nn_model()
+    test.clean_data()
+    test.fit()
+    test.predict("quelle est la vitesse maximum sur l autoroute ?")
+    print(test.articles)
