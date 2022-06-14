@@ -16,11 +16,11 @@ class Bm25():
         self.data = get_clean_preproc_data()
         df = self.data
         df['id'] = df.index
-        df = df[['article_lowered','id']]
+        df = df[['article_lemmatized','id']]
         df = df.to_dict(orient='index')
         formatted_data = []
         for key,text in df.items():
-            formatted_data.append({'id':key,'content':text['article_lowered']})
+            formatted_data.append({'id':key,'content':text['article_lemmatized']})
 
         self.document_store = ElasticsearchDocumentStore(host="localhost", port="9200", username="", password="", index="document")
         self.document_store.write_documents(formatted_data)
@@ -43,6 +43,6 @@ if __name__ == "__main__":
     test = Bm25()
     test.clean_data()
     test.fit()
-    test.predict("quelle est la vitesse maximum sur l autoroute ?")
+    test.predict("quelle est la vitesse normale sur l autoroute ?")
     print(test.articles)
     print(test.get_articles_text_only())

@@ -15,7 +15,7 @@ class Nn_model():
 
     def fit(self):
         self.vectorizer = TfidfVectorizer(max_df=0.8)
-        features = self.vectorizer.fit_transform(self.data.article_tfidf_format)
+        features = self.vectorizer.fit_transform(self.data.article_lemmatized)
 
         self.model = NearestNeighbors(n_neighbors=10)
         self.model.fit(features)
@@ -24,7 +24,7 @@ class Nn_model():
         input = self.vectorizer.transform([question])
         self.articles = self.model.kneighbors(input, return_distance=False)
 
-    def get_articles_text_only (self, article_number=1):
+    def get_articles_text_only (self, article_number=10):
         if len(self.articles[0])< article_number :
             article = self.articles[0]
         else:
@@ -39,4 +39,4 @@ if __name__ == "__main__":
     test.clean_data()
     test.fit()
     test.predict("quelle est la vitesse maximum sur l autoroute ?")
-    print(test.articles)
+    print(test.get_articles_text_only())
