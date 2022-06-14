@@ -11,7 +11,8 @@ plotly
 scikit-learn
 transformers
 torch
-haystack
+farm-haystack
+faiss-cpu
 
 # tests/linter
 black
