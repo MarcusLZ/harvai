@@ -24,12 +24,19 @@ class Nn_model():
         input = self.vectorizer.transform([question])
         self.articles = self.model.kneighbors(input, return_distance=False)
 
+    def get_articles_parsed(self, article_number=10):
+        articles_parsed = []
+        article = self.articles[0][0:article_number]
+        for i in article:
+            articles_parsed.append(self.data.article_content[i])
+        return articles_parsed
+
     def get_articles_text_only (self, article_number=10):
         if len(self.articles[0])< article_number :
             article = self.articles[0]
         else:
             article = self.articles[0][0:article_number]
-        return ''.join(self.data.article_lowered[article])
+        return ''.join(self.data.article_content[article])
 
 
 
@@ -39,4 +46,4 @@ if __name__ == "__main__":
     test.clean_data()
     test.fit()
     test.predict("quelle est la vitesse maximum sur l autoroute ?")
-    print(test.get_articles_text_only())
+    print(test.get_articles_parsed())

@@ -34,6 +34,13 @@ class Bm25():
         candidate_documents = self.model.retrieve(query=question,top_k=10)
         self.articles = [int(candidate_documents[id].id) for id in range(0,10)]
 
+    def get_articles_parsed(self, article_number=10):
+        articles_parsed = []
+        article = self.articles
+        for i in article:
+            articles_parsed.append(self.data.article_content[i])
+        return articles_parsed
+
     def get_articles_text_only (self, article_number=1):
         return ''.join(self.data.article_lowered[self.articles])
 

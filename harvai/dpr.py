@@ -34,8 +34,15 @@ class DPR():
         candidate_documents = p_retrieval.run(query=question, params={"Retriever": {"top_k": 10}})
         self.articles = [int(candidate_documents['documents'][id].id) for id in range(0,10)]
 
+    def get_articles_parsed(self, article_number=10):
+        articles_parsed = []
+        article = self.articles
+        for i in article:
+            articles_parsed.append(self.data.article_content[i])
+        return articles_parsed
+
     def get_articles_text_only (self, article_number=1):
-        return ''.join(self.data.article_lowered[self.articles])
+        return ''.join(self.data.article_content[self.articles])
 
 
 if __name__ == "__main__":
@@ -45,4 +52,4 @@ if __name__ == "__main__":
     test.fit()
     test.predict("quelle est la vitesse normale sur l autoroute ?")
     print(test.articles)
-    print(test.get_articles_text_only())
+    print(test.get_articles_parsed())

@@ -1,3 +1,4 @@
+from contextvars import Context
 from webbrowser import get
 from transformers import pipeline
 
@@ -10,11 +11,10 @@ from harvai.dpr import DPR
 def get_answer(question, retriever="KNN"):
     """ Instanciate and use the transformer model"""
 
-    context = get_context(question, retriever)
+    context, parsed_context = get_context(question, retriever)
     model = pipeline('question-answering', model='etalab-ia/camembert-base-squadFR-fquad-piaf', tokenizer='etalab-ia/camembert-base-squadFR-fquad-piaf')
 
-    return model({ 'question': question, 'context': context })
-
+    return model({ 'question': question, 'context': context }) , parsed_context
 
 def get_context(question, retriever):
     """calling the research model/function"""
@@ -25,11 +25,12 @@ def get_context(question, retriever):
     retriever.fit()
     question = preprocessing_user_input(question)
     retriever.predict(question)
-    text = retriever.get_articles_text_only(article_number=3)
+    context = retriever.get_articles_text_only(article_number=3)
+    parsed_context = retriever.get_articles_parsed()
 
-    return text
+    return context, parsed_context
 
 if __name__ == "__main__":
 
-    test_answer = get_answer("quelle est la vitesse normale autorisée sur l'autoroute ?", "KNN")
+    test_answer = get_answer("quelle est la vitesse normale autorisée sur l'autoroute ?", "BM25")
     print (test_answer)
