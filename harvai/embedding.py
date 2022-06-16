@@ -1,55 +1,52 @@
-from harvai.data import get_clean_preproc_data
+from numpy import asarray
+from numpy import save
+import numpy as np
 
-from haystack.nodes import EmbeddingRetriever
-from haystack.document_stores.faiss import FAISSDocumentStore
-from haystack.pipelines import DocumentSearchPipeline
+from harvai.data import get_clean_preproc_data
+import pandas as pd
+from sentence_transformers import SentenceTransformer, util
 
 
 class Embedding():
-    def __init__(self):
+    def __init__(self, article_number):
         self.data = None
-        self.document_store = None
         self.model = None
-        self.vectorizer = None
+        self.doc_emb = None
         self.articles = None
+        self.article_number = article_number
 
     def clean_data(self):
         self.data = get_clean_preproc_data()
-        df = self.data
-        df['id'] = df.index
-        df = df[['article_lowered','id']]
-        df = df.to_dict(orient='index')
-        formatted_data = []
-        for key,text in df.items():
-            formatted_data.append({'id':key,'content':text['article_lowered']})
-
-        self.document_store = FAISSDocumentStore.load(index_path="haystack_data/embedding/testfile_path")
-
-
+        print('ok')
 
     def fit(self):
-        self.model = EmbeddingRetriever(document_store=self.document_store,
-        embedding_model="sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
-        model_format="sentence_transformers",
-        use_gpu = False,
-        )
+        self.model = SentenceTransformer('sentence-transformers/multi-qa-mpnet-base-cos-v1',device ='cpu')
+        self.doc_emb = np.load('raw_data/embedding_data.npy')
+
 
     def predict(self,question):
-        p_retrieval = DocumentSearchPipeline(self.model)
-        candidate_documents = p_retrieval.run(query=question, params={"Retriever": {"top_k": 10}})
-        self.articles = [int(candidate_documents['documents'][id].id) for id in range(0,10)]
+        query_emb = self.model.encode(question)
+        scores = util.dot_score(query_emb, self.doc_emb)[0].cpu().tolist()
+        self.data['score']=scores
+        self.articles = np.array([self.data.sort_values(by='score', ascending=False).index[0:self.article_number].tolist()])
 
 
-    def get_articles_text_only (self, article_number=1):
-        return ''.join(self.data.article_lowered[self.articles])
+    def get_articles_parsed(self): # Liste d'articles
+        return self.data.sort_values(by='score', ascending=False)['article_content'][0:self.article_number].tolist()
+
+
+    def get_articles_text_only (self):
+        article_list = self.data.sort_values(by='score', ascending=False)['article_content'][0:self.article_number].tolist()
+        return ''.join(article_list)
 
 
 if __name__ == "__main__":
 
-    test = Embedding()
+    test = Embedding(10)
     test.clean_data()
 
     test.fit()
-    test.predict("quelle est la vitesse maximum sur l autoroute ?")
+    test.predict("quelle est la vitesse maximale sur l autoroute ?")
+    print(test.data)
     print(test.articles)
-    print(test.get_articles_text_only())
+    print(test.get_articles_parsed())
