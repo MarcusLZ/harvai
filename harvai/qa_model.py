@@ -1,4 +1,5 @@
 from contextvars import Context
+from re import A
 from webbrowser import get
 from transformers import pipeline
 
@@ -6,6 +7,7 @@ from harvai.data import preprocessing_user_input
 from harvai.nn_model import Nn_model
 from harvai.bm25 import Bm25
 from harvai.dpr import DPR
+from harvai.embedding import Embedding
 
 
 def get_answer(question,retriever,article_number=10):
@@ -19,7 +21,7 @@ def get_answer(question,retriever,article_number=10):
 def get_context(question, retriever,article_number):
     """calling the research model/function"""
 
-    retriever_dictonnary =  {"KNN" : Nn_model(article_number), "BM25":Bm25(article_number), "DPR":DPR(article_number)}
+    retriever_dictonnary =  {"KNN" : Nn_model(article_number), "BM25":Bm25(article_number), "DPR":DPR(article_number), "Embedding":Embedding(article_number)}
     retriever = retriever_dictonnary[retriever]
     retriever.clean_data()
     retriever.fit()
@@ -32,5 +34,5 @@ def get_context(question, retriever,article_number):
 
 if __name__ == "__main__":
 
-    test_answer = get_answer("quelle est la vitesse normale autorisée sur l'autoroute ?", "DPR",10)
+    test_answer = get_answer("quelle est la vitesse maximale autorisée sur l'autoroute ?", "Embedding",2)
     print (test_answer)

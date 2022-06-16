@@ -1,9 +1,5 @@
-from numpy import asarray
-from numpy import save
 import numpy as np
-
 from harvai.data import get_clean_preproc_data
-import pandas as pd
 from sentence_transformers import SentenceTransformer, util
 
 
@@ -17,7 +13,6 @@ class Embedding():
 
     def clean_data(self):
         self.data = get_clean_preproc_data()
-        print('ok')
 
     def fit(self):
         self.model = SentenceTransformer('sentence-transformers/multi-qa-mpnet-base-cos-v1',device ='cpu')
@@ -44,7 +39,6 @@ if __name__ == "__main__":
 
     test = Embedding(10)
     test.clean_data()
-
     test.fit()
     test.predict("quelle est la vitesse maximale sur l autoroute ?")
     print(test.data)
