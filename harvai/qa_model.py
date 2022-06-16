@@ -8,7 +8,7 @@ from harvai.bm25 import Bm25
 from harvai.dpr import DPR
 
 
-def get_answer(question,retriever,article_number=1):
+def get_answer(question,retriever,article_number=10):
     """ Instanciate and use the transformer model"""
 
     context, parsed_context = get_context(question, retriever,article_number)

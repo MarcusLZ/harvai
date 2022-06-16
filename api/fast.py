@@ -18,13 +18,12 @@ app.add_middleware(
 @app.get("/")
 def index():
 
-
     return {"Greeting": "Welcome to harvai API"}
 
 @app.get("/answer")
-def answer(question, retriever="BM25"):
+def answer(question, retriever="BM25", article_number=10):
     # from the user input (question) and articles, get the answer from hugging face
 
-    answer = get_answer(question, retriever)['answer']
+    answer, parsed_context = get_answer(question, retriever, article_number)
 
-    return {"question": question, "answer": answer }
+    return {"question": question, "answer": answer['answer'], "parsed_context" : parsed_context }
