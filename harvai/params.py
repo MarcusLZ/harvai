@@ -24,3 +24,9 @@ def get_pah_retriever(path):
         return "raw_data/retriever.pt"
     else:
         return "../raw_data/retriever.pt"
+
+def get_path_generated_question_dataset(path):
+    if os.path.basename(path) == 'harvai':
+        return "raw_data/generated_questions_dataset.csv"
+    else:
+        return "../raw_data/generated_questions_dataset.csv"

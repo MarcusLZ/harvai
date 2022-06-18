@@ -33,7 +33,7 @@ class Bm25():
 
     def predict(self,question):
         candidate_documents = self.model.retrieve(query=question,top_k=self.article_number)
-        self.articles = [int(candidate_documents[id].id) for id in range(0,self.article_number)]
+        self.articles = [int(document.id) for document in candidate_documents]
 
     def get_articles_parsed(self): # Liste d'articles
         articles_parsed = []
@@ -48,9 +48,9 @@ class Bm25():
 
 if __name__ == "__main__":
 
-    test = Bm25()
+    test = Bm25(5)
     test.clean_data()
     test.fit()
     test.predict("quelle est la vitesse normale sur l autoroute ?")
     print(test.articles)
-    print(test.get_articles_text_only())
+    #print(test.get_articles_text_only())
