@@ -3,8 +3,7 @@ from haystack.document_stores.faiss import FAISSDocumentStore
 from haystack.nodes import DensePassageRetriever
 from haystack.pipelines import DocumentSearchPipeline
 import os
-
-from harvai.params import get_path_faiss, get_pah_retriever
+from harvai.params import get_path_faiss, get_path_retriever
 
 
 class DPR():
@@ -30,7 +29,7 @@ class DPR():
 
 
     def fit(self):
-        self.model = DensePassageRetriever.load(get_pah_retriever(os.getcwd()), document_store=self.document_store, use_gpu = False)
+        self.model = DensePassageRetriever.load(get_path_retriever(os.getcwd()), document_store=self.document_store, use_gpu = False)
 
     def predict(self,question):
         p_retrieval = DocumentSearchPipeline(self.model)
@@ -50,7 +49,7 @@ class DPR():
 
 if __name__ == "__main__":
 
-    test = DPR(10)
+    test = DPR(5)
     test.clean_data()
     test.fit()
     test.predict("quelle est la vitesse normale sur l autoroute ?")

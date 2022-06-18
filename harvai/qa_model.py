@@ -34,7 +34,12 @@ def get_context(question, retriever,article_number):
 
 if __name__ == "__main__":
 
+<<<<<<< HEAD
     answer, parsed_context, context = get_answer("quelle est la vitesse maximale autorisée sur l'autoroute ?", "Embedding",2)
     print (answer, parsed_context, context)
     new = {"answer": answer, "parsed_context" : parsed_context , "context" : context}
     print(new)
+=======
+    test_answer = get_answer("quelle est la vitesse maximale autorisée sur l'autoroute ?", "KNN",2)
+    print (test_answer)
+>>>>>>> 225c97bf4ebd27a559d962d1a64b7e224004906a

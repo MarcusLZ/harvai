@@ -19,8 +19,20 @@ def get_path_faiss(path):
     else:
         return "../raw_data/faiss.index"
 
-def get_pah_retriever(path):
+def get_path_retriever(path):
     if os.path.basename(path) == 'harvai':
         return "raw_data/retriever.pt"
     else:
         return "../raw_data/retriever.pt"
+
+def get_path_generated_question_dataset(path):
+    if os.path.basename(path) == 'harvai':
+        return "raw_data/generated_questions_dataset.csv"
+    else:
+        return "../raw_data/generated_questions_dataset.csv"
+
+def get_path_embedding(path):
+    if os.path.basename(path) == 'harvai':
+        return "raw_data/embedding_data.npy"
+    else:
+        return "../raw_data/embedding_data.npy"
