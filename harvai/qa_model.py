@@ -10,13 +10,13 @@ from harvai.dpr import DPR
 from harvai.embedding import Embedding
 
 
-def get_answer(question,retriever,article_number=10):
+def get_answer(question,retriever,article_number):
     """ Instanciate and use the transformer model"""
 
     context, parsed_context = get_context(question, retriever,article_number)
     model = pipeline('question-answering', model='etalab-ia/camembert-base-squadFR-fquad-piaf', tokenizer='etalab-ia/camembert-base-squadFR-fquad-piaf')
 
-    return model({ 'question': question, 'context': context }) , parsed_context
+    return model({ 'question': question, 'context': context }) , parsed_context, context
 
 def get_context(question, retriever,article_number):
     """calling the research model/function"""
@@ -34,5 +34,8 @@ def get_context(question, retriever,article_number):
 
 if __name__ == "__main__":
 
-    test_answer = get_answer("quelle est la vitesse maximale autorisée sur les autoroutes ?", "KNN",5)
-    print (test_answer)
+
+    answer, parsed_context, context = get_answer("quelle est la vitesse maximale autorisée sur l'autoroute ?", "Embedding",2)
+    print (answer, parsed_context, context)
+    new = {"answer": answer, "parsed_context" : parsed_context , "context" : context}
+    print(new)
