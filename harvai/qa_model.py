@@ -34,5 +34,5 @@ def get_context(question, retriever,article_number):
 
 if __name__ == "__main__":
 
-    test_answer = get_answer("quelle est la vitesse maximale autorisée sur l'autoroute ?", "Embedding",2)
+    test_answer = get_answer("quelle est la vitesse maximale autorisée sur l'autoroute ?", "KNN",2)
     print (test_answer)
