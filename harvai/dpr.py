@@ -29,9 +29,8 @@ class DPR():
         self.document_store = FAISSDocumentStore.load(get_path_faiss(os.getcwd()))
 
 
-
     def fit(self):
-        self.model = DensePassageRetriever.load(get_pah_retriever(os.getcwd()), document_store=self.document_store)
+        self.model = DensePassageRetriever.load(get_pah_retriever(os.getcwd()), document_store=self.document_store, use_gpu = False)
 
     def predict(self,question):
         p_retrieval = DocumentSearchPipeline(self.model)
@@ -51,7 +50,7 @@ class DPR():
 
 if __name__ == "__main__":
 
-    test = DPR()
+    test = DPR(10)
     test.clean_data()
     test.fit()
     test.predict("quelle est la vitesse normale sur l autoroute ?")
