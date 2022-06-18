@@ -1,7 +1,8 @@
 import numpy as np
 from harvai.data import get_clean_preproc_data
 from sentence_transformers import SentenceTransformer, util
-
+from harvai.params import get_path_embedding
+import os
 
 class Embedding():
     def __init__(self, article_number):
@@ -16,7 +17,7 @@ class Embedding():
 
     def fit(self):
         self.model = SentenceTransformer('sentence-transformers/multi-qa-mpnet-base-cos-v1',device ='cpu')
-        self.doc_emb = np.load('raw_data/embedding_data.npy')
+        self.doc_emb = np.load(get_path_embedding(os.getcwd()))
 
 
     def predict(self,question):
