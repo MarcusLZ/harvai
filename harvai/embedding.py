@@ -24,7 +24,7 @@ class Embedding():
         query_emb = self.model.encode(question)
         scores = util.dot_score(query_emb, self.doc_emb)[0].cpu().tolist()
         self.data['score']=scores
-        self.articles = np.array([self.data.sort_values(by='score', ascending=False).index[0:self.article_number].tolist()])
+        self.articles = self.data.sort_values(by='score', ascending=False).index[0:self.article_number].tolist()
 
 
     def get_articles_parsed(self): # Liste d'articles
