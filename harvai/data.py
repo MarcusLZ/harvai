@@ -5,6 +5,7 @@ import os
 import string
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+from nltk.stem.snowball import FrenchStemmer
 import simplemma
 
 from harvai.params import get_path_data, get_path_json
@@ -93,9 +94,8 @@ def preprocessing_user_input(user_input):
 
     user_input = " ".join([str(word) for word in user_input]) # tfidf_format
 
-    langdata = simplemma.load_data('fr') # Lemmatize
-    user_input = simplemma.text_lemmatizer(user_input,langdata)
-    user_input = " ".join([str(word) for word in user_input])
+    stemmer = FrenchStemmer() # Lemmatize
+    user_input = stemmer.stem(user_input)
 
     return user_input
 
