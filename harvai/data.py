@@ -6,7 +6,6 @@ import string
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem.snowball import FrenchStemmer
-import simplemma
 
 from harvai.params import get_path_data, get_path_json
 from harvai.preprocessing import article_number,article_content,article_lower,remove_numbers,remove_punctuation,remove_stopwords, tfidf_format,Lemmatize
@@ -69,7 +68,7 @@ def preprocessing_data(data):
         data = pd.read_json(path_or_buf=get_path_json(os.getcwd()))
         return data
     else :
-        data['article_number'] = data['article_base'].apply(lambda x : article_number(x))
+        data['article_reference'] = data['article_base'].apply(lambda x : article_number(x))
         data['article_content'] = data['article_base'].apply(lambda x : article_content(x))
         data['article_lowered'] = data['article_content'].apply(lambda x : article_lower(x))
         data['article_wo_numbers'] = data['article_lowered'].apply(lambda x : remove_numbers(x))
