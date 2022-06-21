@@ -13,10 +13,10 @@ from harvai.embedding import Embedding
 def get_answer(question,retriever,article_number):
     """ Instanciate and use the transformer model"""
 
-    context, parsed_context = get_context(question, retriever,article_number)
+    context, parsed_context , article_reference = get_context(question, retriever,article_number)
     model = pipeline('question-answering', model='etalab-ia/camembert-base-squadFR-fquad-piaf', tokenizer='etalab-ia/camembert-base-squadFR-fquad-piaf')
 
-    return model({ 'question': question, 'context': context }) , parsed_context, context
+    return model({ 'question': question, 'context': context }) , parsed_context , context , article_reference
 
 def get_context(question, retriever,article_number):
     """calling the research model/function"""
@@ -29,13 +29,12 @@ def get_context(question, retriever,article_number):
     retriever.predict(question)
     context = retriever.get_articles_text_only()
     parsed_context = retriever.get_articles_parsed() # Liste d'articles
+    article_reference = retriever.get_article_reference()
 
-    return context, parsed_context
+    return context, parsed_context , article_reference
 
 if __name__ == "__main__":
 
 
-    answer, parsed_context, context = get_answer("quelle est la vitesse maximale autorisée sur l'autoroute ?", "Embedding",2)
-    print (answer, parsed_context, context)
-    new = {"answer": answer, "parsed_context" : parsed_context , "context" : context}
-    print(new)
+    answer, parsed_context, context,article_reference = get_answer("quelle est la vitesse maximale autorisée sur l'autoroute ?", "BM25",5)
+    print (answer, parsed_context, context, article_reference)

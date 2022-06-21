@@ -9,6 +9,7 @@ class Nn_model():
         self.model = None
         self.vectorizer = None
         self.articles = None
+        self.articles_reference = None
         self.article_number = article_number
 
     def clean_data(self,):
@@ -32,6 +33,9 @@ class Nn_model():
             articles_parsed.append(self.data.article_content[i])
         return articles_parsed
 
+    def get_article_reference(self):
+        return self.data['article_reference'][0:self.article_number].tolist()
+
     def get_articles_text_only (self):
         if len(self.articles)< self.article_number :
             article = self.articles
@@ -43,8 +47,8 @@ class Nn_model():
 
 if __name__ == "__main__":
 
-    test = Nn_model()
+    test = Nn_model(5)
     test.clean_data()
     test.fit()
     test.predict("quelle est la vitesse maximum sur l autoroute ?")
-    print(test.get_articles_parsed())
+    print(test.get_article_reference())

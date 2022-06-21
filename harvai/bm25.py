@@ -42,8 +42,13 @@ class Bm25():
             articles_parsed.append(self.data.article_content[i])
         return articles_parsed
 
+    def get_article_reference(self):
+        return self.data['article_reference'][0:self.article_number].tolist()
+
     def get_articles_text_only (self):
         return ''.join(self.data.article_lowered[self.articles])
+
+
 
 
 if __name__ == "__main__":

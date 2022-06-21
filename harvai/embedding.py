@@ -30,6 +30,9 @@ class Embedding():
     def get_articles_parsed(self): # Liste d'articles
         return self.data.sort_values(by='score', ascending=False)['article_content'][0:self.article_number].tolist()
 
+    def get_article_reference(self):
+        return self.data.sort_values(by='score', ascending=False)['article_reference'][0:self.article_number].tolist()
+
 
     def get_articles_text_only (self):
         article_list = self.data.sort_values(by='score', ascending=False)['article_content'][0:self.article_number].tolist()
