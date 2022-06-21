@@ -5,7 +5,7 @@ from tqdm import tqdm
 import numpy as np
 
 
-def score(model,dataset_portion=50):
+def score(model,dataset_portion=100):
     """Evaluate retriever model on a dataset of generated questions, return the percentage of correct articles found"""
 
     dataset = pd.read_csv(get_path_generated_question_dataset(os.getcwd()))
