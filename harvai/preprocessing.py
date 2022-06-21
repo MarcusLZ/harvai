@@ -2,6 +2,7 @@ import string
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import simplemma
+import re
 
 def article_number(x): # return le numero de l'article
     return x[:17]
@@ -9,7 +10,8 @@ def article_number(x): # return le numero de l'article
 def article_content(x): # return l'article
     return x[17:]
 
-def article_lower(x): # lowercase
+def article_lower(x): # retirer les espaces à gauche // lowercase
+    x = x.lstrip()
     return x.lower()
 
 def remove_numbers(x): # retirer les digits
