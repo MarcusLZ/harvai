@@ -1,8 +1,7 @@
 import string
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import simplemma
-import re
+from nltk.stem.snowball import FrenchStemmer
 
 def article_number(x): # return le numero de l'article
     return x[:17]
@@ -35,7 +34,6 @@ def tfidf_format(x): # Mise en forme pour TfIdf
     return x
 
 def Lemmatize(x): # Mise en forme pour TfIdf + Lemmatized
-    langdata = simplemma.load_data('fr')
-    x = simplemma.text_lemmatizer(x,langdata)
-    x = " ".join([str(word) for word in x])
+    stemmer = FrenchStemmer()
+    x = stemmer.stem(x)
     return x
