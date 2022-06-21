@@ -23,20 +23,20 @@ class Nn_model():
 
     def predict(self,question):
         input = self.vectorizer.transform([question])
-        self.articles = self.model.kneighbors(input, return_distance=False)
+        self.articles = list(self.model.kneighbors(input, return_distance=False)[0])
 
     def get_articles_parsed(self): # Liste d'articles
         articles_parsed = []
-        article = self.articles[0][0:self.article_number]
+        article = self.articles[0:self.article_number]
         for i in article:
             articles_parsed.append(self.data.article_content[i])
         return articles_parsed
 
     def get_articles_text_only (self):
-        if len(self.articles[0])< self.article_number :
-            article = self.articles[0]
+        if len(self.articles)< self.article_number :
+            article = self.articles
         else:
-            article = self.articles[0][0:self.article_number]
+            article = self.articles[0:self.article_number]
         return ''.join(self.data.article_content[article])
 
 
