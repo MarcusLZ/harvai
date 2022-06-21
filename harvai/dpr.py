@@ -29,7 +29,6 @@ class DPR():
         self.document_store = FAISSDocumentStore.load(get_path_faiss(os.getcwd()))
 
 
-
     def fit(self):
         self.model = DensePassageRetriever.load(get_pah_retriever(os.getcwd()), document_store=self.document_store)
 
