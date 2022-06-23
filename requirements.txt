@@ -36,7 +36,6 @@ joblib
 memoized-property
 termcolor
 sentencepiece
-json
 
 # NLP
 regex
