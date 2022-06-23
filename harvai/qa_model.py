@@ -10,18 +10,18 @@ from harvai.dpr import DPR
 from harvai.embedding import Embedding
 
 
-def get_answer(question,retriever,article_number):
+def get_answer(question,retriever,article_number,digits=False):
     """ Instanciate and use the transformer model"""
 
-    context, parsed_context , article_reference = get_context(question, retriever,article_number)
+    context, parsed_context , article_reference = get_context(question, retriever,article_number,digits)
     model = pipeline('question-answering', model='etalab-ia/camembert-base-squadFR-fquad-piaf', tokenizer='etalab-ia/camembert-base-squadFR-fquad-piaf')
 
     return model({ 'question': question, 'context': context }) , parsed_context , context , article_reference
 
-def get_context(question, retriever,article_number):
+def get_context(question, retriever,article_number,digits=False):
     """calling the research model/function"""
 
-    retriever_dictonnary =  {"KNN" : Nn_model(article_number), "BM25":Bm25(article_number), "DPR":DPR(article_number), "Embedding":Embedding(article_number)}
+    retriever_dictonnary =  {"KNN" : Nn_model(article_number,digits), "BM25":Bm25(article_number,digits), "DPR":DPR(article_number,digits), "Embedding":Embedding(article_number,digits)}
     retriever = retriever_dictonnary[retriever]
     retriever.clean_data()
     retriever.fit()
@@ -36,5 +36,5 @@ def get_context(question, retriever,article_number):
 if __name__ == "__main__":
 
 
-    answer, parsed_context, context,article_reference = get_answer("quelle est la vitesse maximale autorisée sur l'autoroute ?", "BM25",5)
+    answer, parsed_context, context,article_reference = get_answer("quelle est la vitesse normale autorisée sur l'autoroute ?", "KNN",2,digits=False)
     print (answer, parsed_context, context, article_reference)

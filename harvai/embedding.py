@@ -5,15 +5,16 @@ from harvai.params import get_path_embedding
 import os
 
 class Embedding():
-    def __init__(self, article_number):
+    def __init__(self, article_number,digits=False):
         self.data = None
         self.model = None
         self.doc_emb = None
         self.articles = None
         self.article_number = article_number
+        self.digits = digits
 
     def clean_data(self):
-        self.data = get_clean_preproc_data()
+        self.data = get_clean_preproc_data(self.digits)
 
     def fit(self):
         self.model = SentenceTransformer('sentence-transformers/multi-qa-mpnet-base-cos-v1',device ='cpu')
@@ -31,7 +32,11 @@ class Embedding():
         return self.data.sort_values(by='score', ascending=False)['article_content'][0:self.article_number].tolist()
 
     def get_article_reference(self):
-        return self.data.sort_values(by='score', ascending=False)['article_reference'][0:self.article_number].tolist()
+        articles_references = []
+        articles = self.articles
+        for i in articles:
+            articles_references.append(self.data.article_reference[i])
+        return articles_references
 
 
     def get_articles_text_only (self):

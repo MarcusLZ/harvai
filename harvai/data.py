@@ -5,15 +5,15 @@ import os
 import string
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-from nltk.stem.snowball import FrenchStemmer
+import simplemma
 
-from harvai.params import get_path_data, get_path_json
+from harvai.params import get_path_data, get_path_json, get_path_json_digits
 from harvai.preprocessing import article_number,article_content,article_lower,remove_numbers,remove_punctuation,remove_stopwords, tfidf_format,Lemmatize
 
-def get_clean_preproc_data():
+def get_clean_preproc_data(digits=False):
     code_brut = get_data()
     cleaned_data = clean_data(code_brut)
-    preproc_data = preprocessing_data(cleaned_data)
+    preproc_data = preprocessing_data(cleaned_data,digits)
     return preproc_data
 
 def get_data(online=False):
@@ -63,20 +63,35 @@ def clean_data(code_brut):
                        columns=['article_base'])
     return data
 
-def preprocessing_data(data):
-    if os.path.exists(get_path_json(os.getcwd())):
-        data = pd.read_json(path_or_buf=get_path_json(os.getcwd()))
+def preprocessing_data(data,digits=False):
+    if digits == False :
+        if os.path.exists(get_path_json(os.getcwd())):
+            data = pd.read_json(path_or_buf=get_path_json(os.getcwd()))
+            return data
+        else :
+            data['article_reference'] = data['article_base'].apply(lambda x : article_number(x))
+            data['article_content'] = data['article_base'].apply(lambda x : article_content(x))
+            data['article_lowered'] = data['article_content'].apply(lambda x : article_lower(x))
+            data['article_wo_numbers'] = data['article_lowered'].apply(lambda x : remove_numbers(x))
+            data['article_wo_punctuation'] = data['article_wo_numbers'].apply(lambda x : remove_punctuation(x))
+            data['article_wo_stopwords'] = data['article_wo_punctuation'].apply(lambda x : remove_stopwords(x))
+            data['article_tfidf_format'] = data['article_wo_stopwords'].apply(lambda x : tfidf_format(x))
+            data['article_lemmatized'] = data['article_tfidf_format'].apply(lambda x : Lemmatize(x))
+            data.to_json('../raw_data/data_preproc.json')
         return data
     else :
-        data['article_reference'] = data['article_base'].apply(lambda x : article_number(x))
-        data['article_content'] = data['article_base'].apply(lambda x : article_content(x))
-        data['article_lowered'] = data['article_content'].apply(lambda x : article_lower(x))
-        data['article_wo_numbers'] = data['article_lowered'].apply(lambda x : remove_numbers(x))
-        data['article_wo_punctuation'] = data['article_wo_numbers'].apply(lambda x : remove_punctuation(x))
-        data['article_wo_stopwords'] = data['article_wo_punctuation'].apply(lambda x : remove_stopwords(x))
-        data['article_tfidf_format'] = data['article_wo_stopwords'].apply(lambda x : tfidf_format(x))
-        data['article_lemmatized'] = data['article_tfidf_format'].apply(lambda x : Lemmatize(x))
-        data.to_json('../raw_data/data_preproc.json')
+        if os.path.exists(get_path_json_digits(os.getcwd())):
+            data = pd.read_json(path_or_buf=get_path_json_digits(os.getcwd()))
+            return data
+        else :
+            data['article_reference'] = data['article_base'].apply(lambda x : article_number(x))
+            data['article_content'] = data['article_base'].apply(lambda x : article_content(x))
+            data['article_lowered'] = data['article_content'].apply(lambda x : article_lower(x))
+            data['article_wo_punctuation'] = data['article_lowered'].apply(lambda x : remove_punctuation(x))
+            data['article_wo_stopwords'] = data['article_wo_punctuation'].apply(lambda x : remove_stopwords(x))
+            data['article_tfidf_format'] = data['article_wo_stopwords'].apply(lambda x : tfidf_format(x))
+            data['article_lemmatized'] = data['article_tfidf_format'].apply(lambda x : Lemmatize(x))
+            data.to_json('../raw_data/data_preproc_digits.json')
         return data
 
 def preprocessing_user_input(user_input):
@@ -93,8 +108,9 @@ def preprocessing_user_input(user_input):
 
     user_input = " ".join([str(word) for word in user_input]) # tfidf_format
 
-    stemmer = FrenchStemmer() # Lemmatize
-    user_input = stemmer.stem(user_input)
+    langdata = simplemma.load_data('fr')
+    user_input = simplemma.text_lemmatizer(user_input,langdata)
+    user_input = " ".join([str(word) for word in user_input])
 
     return user_input
 
