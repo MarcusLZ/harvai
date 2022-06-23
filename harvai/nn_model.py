@@ -16,9 +16,9 @@ class Nn_model():
     def clean_data(self):
         self.data = get_clean_preproc_data(self.digits)
 
-    def fit(self):
+    def fit(self,preprocessing='article_lemmatized'):
         self.vectorizer = TfidfVectorizer(max_df=0.8)
-        features = self.vectorizer.fit_transform(self.data.article_lemmatized)
+        features = self.vectorizer.fit_transform(self.data[preprocessing])
 
         self.model = NearestNeighbors(n_neighbors=self.article_number)
         self.model.fit(features)

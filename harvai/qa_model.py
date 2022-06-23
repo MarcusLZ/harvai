@@ -35,6 +35,6 @@ def get_context(question, retriever,article_number,digits=False):
 
 if __name__ == "__main__":
 
-
     answer, parsed_context, context,article_reference = get_answer("quelle est la vitesse normale autorisée sur l'autoroute ?", "KNN",2,digits=False)
     print (answer, parsed_context, context, article_reference)
+

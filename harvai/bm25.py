@@ -14,15 +14,16 @@ class Bm25():
         self.article_number = article_number
         self.digits = digits
 
+
     def clean_data(self):
         self.data = get_clean_preproc_data(self.digits)
         df = self.data
         df['id'] = df.index
-        df = df[['article_lemmatized','id']]
+        df = df[[preprocessing,'id']]
         df = df.to_dict(orient='index')
         formatted_data = []
         for key,text in df.items():
-            formatted_data.append({'id':key,'content':text['article_lemmatized']})
+            formatted_data.append({'id':key,'content':text[preprocessing]})
 
         self.document_store = ElasticsearchDocumentStore(host="localhost", port="9200", username="", password="", index="document")
         self.document_store.write_documents(formatted_data)
