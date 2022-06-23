@@ -24,6 +24,6 @@ def index():
 def answer(question, retriever, article_number):
     # from the user input (question) and articles, get the answer from hugging face
 
-    answer, parsed_context, context = get_answer(question, retriever, int(article_number))
+    answer, parsed_context, context, article_reference = get_answer(question, retriever, int(article_number))
 
-    return {"question": question, "answer": answer, "parsed_context" : parsed_context, "context" : context }
+    return {"question": question, "answer": answer, "parsed_context" : parsed_context, "context" : context , "article_reference" : article_reference}

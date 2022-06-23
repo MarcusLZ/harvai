@@ -7,16 +7,17 @@ from harvai.params import get_path_faiss, get_path_retriever
 
 
 class DPR():
-    def __init__(self,article_number):
+    def __init__(self,article_number,digits=False):
         self.data = None
         self.document_store = None
         self.model = None
         self.vectorizer = None
         self.articles = None
         self.article_number = article_number
+        self.digits = digits
 
     def clean_data(self):
-        self.data = get_clean_preproc_data()
+        self.data = get_clean_preproc_data(self.digits)
         df = self.data
         df['id'] = df.index
         df = df[['article_lemmatized','id']]
@@ -42,6 +43,13 @@ class DPR():
         for i in article:
             articles_parsed.append(self.data.article_content[i])
         return articles_parsed
+
+    def get_article_reference(self):
+        articles_references = []
+        articles = self.articles
+        for i in articles:
+            articles_references.append(self.data.article_reference[i])
+        return articles_references
 
     def get_articles_text_only (self):
         return ''.join(self.data.article_content[self.articles])

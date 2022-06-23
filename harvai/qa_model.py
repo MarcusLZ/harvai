@@ -10,18 +10,18 @@ from harvai.dpr import DPR
 from harvai.embedding import Embedding
 
 
-def get_answer(question,retriever,article_number):
+def get_answer(question,retriever,article_number,digits=False):
     """ Instanciate and use the transformer model"""
 
-    context, parsed_context = get_context(question, retriever,article_number)
+    context, parsed_context , article_reference = get_context(question, retriever,article_number,digits)
     model = pipeline('question-answering', model='etalab-ia/camembert-base-squadFR-fquad-piaf', tokenizer='etalab-ia/camembert-base-squadFR-fquad-piaf')
 
-    return model({ 'question': question, 'context': context }) , parsed_context, context
+    return model({ 'question': question, 'context': context }) , parsed_context , context , article_reference
 
-def get_context(question, retriever,article_number):
+def get_context(question, retriever,article_number,digits=False):
     """calling the research model/function"""
 
-    retriever_dictonnary =  {"KNN" : Nn_model(article_number), "BM25":Bm25(article_number), "DPR":DPR(article_number), "Embedding":Embedding(article_number)}
+    retriever_dictonnary =  {"KNN" : Nn_model(article_number,digits), "BM25":Bm25(article_number,digits), "DPR":DPR(article_number,digits), "Embedding":Embedding(article_number,digits)}
     retriever = retriever_dictonnary[retriever]
     retriever.clean_data()
     retriever.fit()
@@ -29,11 +29,12 @@ def get_context(question, retriever,article_number):
     retriever.predict(question)
     context = retriever.get_articles_text_only()
     parsed_context = retriever.get_articles_parsed() # Liste d'articles
+    article_reference = retriever.get_article_reference()
 
-    return context, parsed_context
+    return context, parsed_context , article_reference
 
 if __name__ == "__main__":
 
+    answer, parsed_context, context,article_reference = get_answer("quelle est la vitesse normale autorisée sur l'autoroute ?", "KNN",2,digits=False)
+    print (answer, parsed_context, context, article_reference)
 
-    answer, parsed_context, context = get_answer("quelle est la vitesse maximale autorisée sur les autoroutes ?", "DPR",2)
-    print (answer, parsed_context, context)
